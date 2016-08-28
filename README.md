@@ -1,6 +1,12 @@
 # springboot-example
-Java Spring boot example
+Java Spring Boot example
 
-Starting
+Starting project
 
 gradle bootRun
+
+Project dependencies
+
+* Spring Actuator
+* Spring Security
+* Spring Thymeleaf
