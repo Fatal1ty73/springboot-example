@@ -5,10 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+@EnableWebSecurity
 public class AppConfigurator extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -19,9 +22,9 @@ public class AppConfigurator extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin().loginPage("/login").failureUrl("/login?error").successForwardUrl("/").permitAll()
                 .and()
-                .logout().logoutUrl("/logout").deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/")
-                .clearAuthentication(true).invalidateHttpSession(true);
+                .logout().clearAuthentication(true).invalidateHttpSession(true)
+                //Dirty hack to avoid POST request when happens csrf logout
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"));
     }
 
     @Override
